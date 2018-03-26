@@ -1,15 +1,7 @@
 import bcrypt from 'bcrypt';
 import { tryLogin } from '../auth';
+import formatErrors from '../formatErrors';
 
-const formatErrors = (e, models) => {
-  if (e instanceof models.sequelize.ValidationError) {
-    return e.errors.map(error => {
-      const { path, message } = error;
-      return { path, message };
-    });
-  }
-  return [{ path: 'Unknown', message: 'Something went wrong' }];
-};
 export default {
   Query: {
     getUser: (parent, { id }, { models }) =>
