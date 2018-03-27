@@ -7,6 +7,7 @@ const sequelize = new Sequelize(
   config.password,
   {
     dialect: 'postgres',
+    operatorsAliases: Sequelize.Op,
     define: {
       underscored: true,
     },
