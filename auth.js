@@ -4,10 +4,10 @@ import _ from 'lodash';
 
 export const createTokens = async (user, secret, secret2) => {
   console.log(_.pick(user, ['id', 'idAdmin']), _.pick(user, 'id'));
-  const { id } = user;
+  const { id, username } = user;
   const createToken = jwt.sign(
     {
-      user: { id },
+      user: { id, username },
     },
     secret,
     {

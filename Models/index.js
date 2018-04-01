@@ -7,6 +7,7 @@ const sequelize = new Sequelize(
   config.password,
   {
     dialect: 'postgres',
+    operatorsAliases: Sequelize.Op,
     define: {
       underscored: true,
     },
@@ -15,6 +16,7 @@ const sequelize = new Sequelize(
 
 const Models = {
   Channel: sequelize.import('./channel'),
+  Member: sequelize.import('./member'),
   Message: sequelize.import('./message'),
   Team: sequelize.import('./team'),
   User: sequelize.import('./user'),
