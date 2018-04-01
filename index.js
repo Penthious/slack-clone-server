@@ -72,7 +72,13 @@ app.use(
     },
   })),
 );
-app.use('/graphiql', graphiqlExpress({ endpointURL }));
+app.use(
+  endpointURL,
+  graphiqlExpress({
+    endpointURL,
+    subscriptionsEndpoint: `ws://localhost:${PORT}${subscriptionsURL}`,
+  }),
+);
 const server = createServer(app);
 
 models.sequelize.sync().then(() => {
