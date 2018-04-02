@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import _ from 'lodash';
 import config from './config';
+import Models from './Models';
 
 export const createTokens = async (user, secret, secret2) => {
   console.log(_.pick(user, ['id', 'idAdmin']), _.pick(user, 'id'));
@@ -116,7 +117,7 @@ export const addUser = async (req, res, next) => {
       const newTokens = await refreshTokens(
         token,
         refreshToken,
-        models,
+        Models,
         config.SECRET,
         config.SECRET2,
       );

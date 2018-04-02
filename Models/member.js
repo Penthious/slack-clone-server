@@ -1,6 +1,10 @@
-import bcrypt from 'bcrypt';
 export default (sequelize, DataTypes) => {
-  const Member = sequelize.define('members', {});
+  const Member = sequelize.define('members', {
+    admin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+  });
 
   return Member;
 };

@@ -47,7 +47,7 @@ app.use(
   })),
 );
 app.use(
-  endpointURL,
+  '/graphiql',
   graphiqlExpress({
     endpointURL,
     subscriptionsEndpoint: `ws://localhost:${PORT}${subscriptionsURL}`,
