@@ -19,7 +19,6 @@ export default {
             memberPromise,
             userToAddPromise,
           ]);
-          console.log(member);
           if (!userToAdd) {
             return {
               ok: false,
@@ -66,7 +65,6 @@ export default {
               userId: user.id,
               admin: true,
             });
-            console.log(member, 'member');
             return team;
           });
 
