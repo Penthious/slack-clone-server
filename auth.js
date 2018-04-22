@@ -1,11 +1,9 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import _ from 'lodash';
 import config from './config';
 import Models from './Models';
 
 export const createTokens = async (user, secret, secret2) => {
-  console.log(_.pick(user, ['id', 'idAdmin']), _.pick(user, 'id'));
   const { id, username } = user;
   const createToken = jwt.sign(
     {
@@ -122,7 +120,7 @@ export const addUser = async (req, res, next) => {
         config.SECRET2,
       );
       if (newTokens.token && newTokens.refreshToken) {
-        res.set('Aceess-Control-Expose-Headers', 'x-token, x-refresh-token');
+        res.set('Access-Control-Expose-Headers', 'x-token, x-refresh-token');
         res.set('x-token', newTokens.token);
         res.set('x-refresh-token', newTokens.refreshToken);
       }

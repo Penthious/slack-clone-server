@@ -57,12 +57,13 @@ const server = createServer(app);
 
 models.sequelize.sync().then(() => {
   server.listen(PORT, () => {
+    // eslint-disable-next-line no-new
     new SubscriptionServer(
       {
         execute,
         subscribe,
         schema,
-        onConnect: async ({ token, refreshToken }, webSocket) => {
+        onConnect: async ({ token, refreshToken }) => {
           if (token && refreshToken) {
             try {
               const { user } = jwt.verify(token, config.SECRET);
