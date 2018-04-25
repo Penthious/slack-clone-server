@@ -16,6 +16,9 @@ export default {
       ),
   },
   Query: {
+    getUser: requiresAuth.createResolver((parent, { userId }, { models }) =>
+      models.User.findOne({ where: { id: userId } }),
+    ),
     allUsers: requiresAuth.createResolver((parent, args, { models }) =>
       models.User.findAll(),
     ),
