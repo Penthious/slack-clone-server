@@ -1,8 +1,12 @@
 import Sequelize from 'sequelize';
 import config from '../config';
 
-const sequelize = new Sequelize(
-  config.database,
+console.log('==========================');
+console.log('==========================');
+console.log('==========================');
+console.log(process.env.TEST_DB);
+export const sequelize = new Sequelize(
+  process.env.TEST_DB || config.database,
   config.username,
   config.password,
   {
@@ -24,11 +28,9 @@ const Models = {
 };
 
 Object.keys(Models).forEach(modelName => {
-  console.log(modelName);
   if ('associate' in Models[modelName]) {
     Models[modelName].associate(Models);
   }
-  console.log(modelName, Models[modelName]);
 });
 
 Models.sequelize = sequelize;

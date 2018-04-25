@@ -89,3 +89,5 @@ models.sequelize.sync().then(() => {
     );
   });
 });
+
+export default app;
