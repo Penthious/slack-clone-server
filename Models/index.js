@@ -1,11 +1,7 @@
 import Sequelize from 'sequelize';
 import config from '../config';
 
-console.log('==========================');
-console.log('==========================');
-console.log('==========================');
-console.log(process.env.TEST_DB);
-export const sequelize = new Sequelize(
+const sequelize = new Sequelize(
   process.env.TEST_DB || config.database,
   config.username,
   config.password,
