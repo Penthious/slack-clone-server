@@ -47,7 +47,6 @@ describe('user resolvers', () => {
   });
 
   test('register', async done => {
-    console.log('here we go');
     const { body } = await chai
       .request(server)
       .post('/graphql')
@@ -84,13 +83,11 @@ describe('user resolvers', () => {
   });
 
   test('login', async done => {
-    const user = await createUser({
+    await createUser({
       username: 'tester',
       email: 'test@test.com',
       password: 'password',
     });
-
-    console.log(user, 'aoeuathaoeuntsaoeusntaoehuaoetns');
 
     const { body } = await chai
       .request(server)
