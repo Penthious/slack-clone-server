@@ -17,6 +17,10 @@ export default {
     },
   },
   Message: {
+    url: parent =>
+      parent.url
+        ? `http://${config.BASE_URL}:${config.PORT}/${parent.url}`
+        : parent.url,
     user: ({ user, userId }, args, { models }) => {
       if (user) {
         return user;
