@@ -13,6 +13,7 @@ import { SubscriptionServer } from 'subscriptions-transport-ws';
 import models from './Models';
 import config from './config';
 import { refreshTokens, addUser } from './auth';
+import fileMiddleware from './fileMiddleware';
 
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './Schema')));
 const resolvers = mergeResolvers(
@@ -24,7 +25,6 @@ const schema = makeExecutableSchema({
   resolvers,
 });
 
-const PORT = 8080;
 const app = express();
 app.use(cors('*'));
 
@@ -36,6 +36,7 @@ const subscriptionsURL = '/subscriptions';
 app.use(
   endpointURL,
   bodyParser.json(),
+  fileMiddleware,
   graphqlExpress(req => ({
     schema,
     context: {
@@ -50,13 +51,15 @@ app.use(
   '/graphiql',
   graphiqlExpress({
     endpointURL,
-    subscriptionsEndpoint: `ws://localhost:${PORT}${subscriptionsURL}`,
+    subscriptionsEndpoint: `ws://${config.BASE_URL}:${
+      config.PORT
+    }${subscriptionsURL}`,
   }),
 );
 const server = createServer(app);
 
 models.sequelize.sync().then(() => {
-  server.listen(PORT, () => {
+  server.listen(config.PORT, () => {
     // eslint-disable-next-line no-new
     new SubscriptionServer(
       {

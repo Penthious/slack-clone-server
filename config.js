@@ -7,4 +7,7 @@ export default {
   // JWT
   SECRET: 'ReplaceWithSomethingGood',
   SECRET2: 'ReplaceWithSomethingElseGood',
+
+  BASE_URL: 'localhost',
+  PORT: '8080',
 };

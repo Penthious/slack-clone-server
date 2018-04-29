@@ -7,8 +7,7 @@
     "start": "nodemon --exec babel-node index.js",
     "test-start": "TEST_DB=testslack nodemon --exec babel-node index.js",
     "test": "TEST_DB=testslack jest",
-    "prettier":
-      "prettier --single-quote --trailing-comma all --write '{./*.js,./**/*.js}'"
+    "prettier": "prettier --single-quote --trailing-comma all --write '{./*.js,./**/*.js}'"
   },
   "keywords": [],
   "author": "",
@@ -37,6 +36,7 @@
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "express": "^4.16.3",
+    "formidable": "^1.2.1",
     "graphql": "^0.13.2",
     "graphql-subscriptions": "^0.5.8",
     "graphql-tools": "^2.24.0",
