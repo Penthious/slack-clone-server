@@ -28,7 +28,7 @@ export default {
               const channel = await models.Channel.create(args, {
                 transaction,
               });
-              if (args.members.length) {
+              if (!args.public) {
                 const members = args.members.filter(m => m !== user.id);
                 members.push(user.id);
 
