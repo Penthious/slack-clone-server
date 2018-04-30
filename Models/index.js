@@ -16,11 +16,12 @@ const sequelize = new Sequelize(
 
 const Models = {
   Channel: sequelize.import('./channel'),
+  DirectMessage: sequelize.import('./directMessage'),
   Member: sequelize.import('./member'),
   Message: sequelize.import('./message'),
+  PCMember: sequelize.import('./pcmember'),
   Team: sequelize.import('./team'),
   User: sequelize.import('./user'),
-  DirectMessage: sequelize.import('./directMessage'),
 };
 
 Object.keys(Models).forEach(modelName => {
