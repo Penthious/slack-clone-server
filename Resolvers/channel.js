@@ -3,6 +3,49 @@ import { requiresAuth } from '../permissions';
 
 export default {
   Mutation: {
+    getOrCreateChannel: requiresAuth.createResolver(
+      async (parent, { members, teamId }, { models, user }) => {
+        members.push(user.id);
+        const [data] = await models.sequelize.query(
+          `
+        select c.id
+        from channels as c, pcmembers as pc
+        where pc.channel_id = c.id and c.dm = true and c.team_id = ${teamId} and c.public = false
+        group by c.id
+        having array_agg(pc.user_id) @>
+        Array[${members.join(',')}] and count(pc.user_id) =
+        ${members.length};
+      `,
+          { raw: true },
+        );
+
+        if (data.length) {
+          return data[0].id;
+        }
+
+        const channelId = await models.sequelize.transaction(
+          async transaction => {
+            const channel = await models.Channel.create(
+              {
+                name: 'hello',
+                public: false,
+                dm: true,
+                teamId,
+              },
+              { transaction },
+            );
+            const cId = channel.dataValues.id;
+            const pcmembers = members.map(m => ({
+              userId: m,
+              channelId: cId,
+            }));
+            await models.PCMember.bulkCreate(pcmembers, { transaction });
+            return cId;
+          },
+        );
+        return channelId;
+      },
+    ),
     createChannel: requiresAuth.createResolver(
       async (parent, args, { models, user }) => {
         try {
