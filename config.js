@@ -10,4 +10,6 @@ export default {
 
   BASE_URL: 'localhost',
   PORT: '8080',
+  REDIS_DOMAIN_NAME: '127.0.0.1',
+  REDIS_PORT: 6379,
 };
