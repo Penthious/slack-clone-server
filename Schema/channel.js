@@ -13,8 +13,15 @@ export default `
     channel: Channel
     errors: [Error!]
   }
+
+  type DMChannelResponse {
+    id: Int!
+    name: String!
+    ok: Boolean!
+  }
+
   type Mutation {
     createChannel(teamId: Int!, name: String!, public: Boolean=false, members: [Int!]): ChannelResponse!
-    getOrCreateChannel(members: [Int!]!, teamId: Int!): Int!
+    getOrCreateChannel(members: [Int!]!, teamId: Int!): DMChannelResponse!
   }
 `;
