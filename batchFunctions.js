@@ -51,6 +51,6 @@ export const memberBatcher = () => {};
 export const messageBatcher = () => {};
 export const pcmemberBatcher = () => {};
 export const teamBatcher = () => {};
-export const meBatcher = (ids, models, user) => {
-  models.User.findAll({ where: { id: user.id } });
+export const meBatcher = (ids, models) => {
+  models.User.findAll({ where: { id: { [models.op.in]: ids } } });
 };
