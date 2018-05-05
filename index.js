@@ -9,11 +9,13 @@ import cors from 'cors';
 import { createServer } from 'http';
 import { execute, subscribe } from 'graphql';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
+import DataLoader from 'dataloader';
 
 import models from './Models';
 import config from './config';
 import { refreshTokens, addUser } from './auth';
 import fileMiddleware from './fileMiddleware';
+import { channelBatcher } from './batchFunctions';
 
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './Schema')));
 const resolvers = mergeResolvers(
@@ -44,6 +46,9 @@ app.use(
       user: req.user,
       SECRET: config.SECRET,
       SECRET2: config.SECRET2,
+      channelLoader: new DataLoader(ids =>
+        channelBatcher(ids, models, req.user),
+      ),
     },
   })),
 );
