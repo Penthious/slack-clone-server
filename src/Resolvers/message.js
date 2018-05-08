@@ -51,13 +51,7 @@ export default {
           where: { channelId },
           limit: 35,
         };
-        console.log('=====================');
-        console.log('=====================');
-        console.log('=====================');
-        console.log(cursor);
-        console.log('=====================');
-        console.log('=====================');
-        console.log('=====================');
+
         if (cursor) {
           options.where.id = {
             [models.op.lt]: cursor,
