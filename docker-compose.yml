@@ -6,6 +6,8 @@ services:
       - webnet
   db:
     image: postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
     networks:
       - webnet
     environment:
@@ -14,13 +16,25 @@ services:
       POSTGRES_DB: slack
   web:
     image: slack-clone-server
-    ports:
-      - "8080:8080"
     networks:
       - webnet
     environment:
       DB_HOST: db
       REDIS_HOST: redis
+    depends_on:
+      - db
+      - redis
     command: ["./wait-for-it.sh", "db:5432", "--", "node", "index.js"]
+  nginx:
+    image: nginx
+    volumes:
+     - ./site.template:/etc/nginx/conf.d/site.template
+    ports:
+     - "8080:80"
+    networks:
+      - webnet
+    depends_on:
+      - web
+    command: /bin/bash -c "envsubst < /etc/nginx/conf.d/site.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
 networks:
   webnet:
