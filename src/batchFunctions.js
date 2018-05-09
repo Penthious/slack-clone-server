@@ -26,31 +26,38 @@ export const channelBatcher = async (ids, models, user) => {
 
   return ids.map(id => data[id]);
 };
-export const directMessageBatcher = async (ids, models, user) => {
-  const results = await models.sequelize.query(
-    'select distinct on (u.id) u.id, u.username from users as u join direct_messages as dm on (u.id = dm.sender_id) or (u.id = dm.receiver_id) where (:currentUserId = dm.sender_id or :currentUserId = dm.receiver_id) and dm.team_id = :teamId',
-    {
-      replacements: { currentUserId: user.id, teamId: ids[0] },
-      model: models.User,
-      raw: true,
-    },
-  );
-
-  const data = {};
-
-  results.forEach(r => {
-    if (data[r.team_id]) {
-      data[r.team_id].push(r);
-    } else {
-      data[r.team_id] = [r];
-    }
-  });
-  return ids.map(id => data[id]).filter(Boolean);
-};
+export const directMessageBatcher = async () => {};
 export const memberBatcher = () => {};
 export const messageBatcher = () => {};
 export const pcmemberBatcher = () => {};
 export const teamBatcher = () => {};
-export const meBatcher = (ids, models) => {
-  models.User.findAll({ where: { id: { [models.op.in]: ids } } });
+export const userBatcher = async (ids, models) => {
+  // const results = await models.sequelize.query(
+  //   `
+  // select *
+  // from users as u
+  // where u.id in (:userIds);
+  // `,
+  //   {
+  //     replacements: { userIds: ids },
+  //     model: models.User,
+  //     raw: true,
+  //   },
+  // );
+  const results = await models.User.findAll({
+    where: {
+      id: {
+        [models.op.or]: ids,
+      },
+    },
+    raw: true,
+  });
+
+  const data = {};
+
+  results.forEach(r => {
+    data[r.id] = r;
+  });
+
+  return ids.map(id => data[id]);
 };

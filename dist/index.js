@@ -81,7 +81,8 @@ app.use(endpointURL, _bodyParser2.default.json(), _fileMiddleware2.default, (0, 
     user: req.user,
     SECRET: _config2.default.SECRET,
     SECRET2: _config2.default.SECRET2,
-    channelLoader: new _dataloader2.default(ids => (0, _batchFunctions.channelBatcher)(ids, _Models2.default, req.user))
+    channelLoader: new _dataloader2.default(ids => (0, _batchFunctions.channelBatcher)(ids, _Models2.default, req.user)),
+    userLoader: new _dataloader2.default(ids => (0, _batchFunctions.userBatcher)(ids, _Models2.default, req.user))
   }
 })));
 app.use('/graphiql', (0, _apolloServerExpress.graphiqlExpress)({

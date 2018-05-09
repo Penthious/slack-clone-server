@@ -15,7 +15,7 @@ import models from './Models';
 import config from './config';
 import { refreshTokens, addUser } from './auth';
 import fileMiddleware from './fileMiddleware';
-import { channelBatcher } from './batchFunctions';
+import { channelBatcher, userBatcher } from './batchFunctions';
 
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './Schema')));
 const resolvers = mergeResolvers(
@@ -49,6 +49,7 @@ app.use(
       channelLoader: new DataLoader(ids =>
         channelBatcher(ids, models, req.user),
       ),
+      userLoader: new DataLoader(ids => userBatcher(ids, models, req.user)),
     },
   })),
 );

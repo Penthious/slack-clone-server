@@ -32,11 +32,11 @@ exports.default = {
   },
   Message: {
     url: parent => parent.url ? `http://${_config2.default.BASE_URL}:${_config2.default.PORT}/${parent.url}` : parent.url,
-    user: ({ user, userId }, args, { models }) => {
+    user: ({ user, userId }, args, { userLoader }) => {
       if (user) {
         return user;
       }
-      return models.User.findOne({ where: { id: userId } }, { raw: true });
+      return userLoader.load(userId);
     }
   },
   Query: {
