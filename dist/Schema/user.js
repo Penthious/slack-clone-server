@@ -1,4 +1,9 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.default=`
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = `
   type User {
     id: Int!
     username: String!

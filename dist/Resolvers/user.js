@@ -1,1 +1,51 @@
-'use strict';Object.defineProperty(exports,'__esModule',{value:!0});var _auth=require('../auth'),_formatErrors=require('../formatErrors'),_formatErrors2=_interopRequireDefault(_formatErrors),_permissions=require('../permissions');function _interopRequireDefault(a){return a&&a.__esModule?a:{default:a}}exports.default={User:{teams:(a,b,{models:c,user:d})=>c.sequelize.query('SELECT * FROM teams as team JOIN members as member on team.id = member.team_id WHERE member.user_id = ?',{replacements:[d.id],model:c.Team,raw:!0})},Query:{getUser:_permissions.requiresAuth.createResolver((a,{userId:b},{models:c})=>c.User.findOne({where:{id:b}})),allUsers:_permissions.requiresAuth.createResolver((a,b,{models:c})=>c.User.findAll()),me:_permissions.requiresAuth.createResolver((a,b,{models:c,user:d})=>c.User.findOne({where:{id:d.id}}))},Mutation:{login:(a,{email:b,password:c},{models:d,SECRET:e,SECRET2:f})=>(0,_auth.tryLogin)(b,c,d,e,f),register:async(a,b,{models:c,SECRET:d,SECRET2:e})=>{try{const a=await c.User.create(b),[f,g]=await(0,_auth.createTokens)(a,d,b.password+e);return{ok:!0,user:a,token:f,refreshToken:g}}catch(a){return{ok:!1,errors:(0,_formatErrors2.default)(a,c)}}}}};
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _auth = require('../auth');
+
+var _formatErrors = require('../formatErrors');
+
+var _formatErrors2 = _interopRequireDefault(_formatErrors);
+
+var _permissions = require('../permissions');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+  User: {
+    teams: (parent, args, { models, user }) => models.sequelize.query('SELECT * FROM teams as team JOIN members as member on team.id = member.team_id WHERE member.user_id = ?', {
+      replacements: [user.id],
+      model: models.Team,
+      raw: true
+    })
+  },
+  Query: {
+    getUser: _permissions.requiresAuth.createResolver((parent, { userId }, { models }) => models.User.findOne({ where: { id: userId } })),
+    allUsers: _permissions.requiresAuth.createResolver((parent, args, { models }) => models.User.findAll()),
+    me: _permissions.requiresAuth.createResolver((parent, args, { models, user }) => models.User.findOne({ where: { id: user.id } }))
+  },
+  Mutation: {
+    login: (parent, { email, password }, { models, SECRET, SECRET2 }) => (0, _auth.tryLogin)(email, password, models, SECRET, SECRET2),
+    register: async (parent, args, { models, SECRET, SECRET2 }) => {
+      try {
+        const user = await models.User.create(args);
+        const [token, refreshToken] = await (0, _auth.createTokens)(user, SECRET, args.password + SECRET2);
+
+        return {
+          ok: true,
+          user,
+          token,
+          refreshToken
+        };
+      } catch (err) {
+        return {
+          ok: false,
+          errors: (0, _formatErrors2.default)(err, models)
+        };
+      }
+    }
+  }
+};

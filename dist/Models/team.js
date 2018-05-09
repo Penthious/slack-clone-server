@@ -1,1 +1,25 @@
-'use strict';Object.defineProperty(exports,'__esModule',{value:!0}),exports.default=(a,b)=>{const c=a.define('teams',{name:{type:b.STRING,unique:!0}});return c.associate=a=>{c.belongsToMany(a.User,{through:a.Member,foreignKey:{name:'teamId',field:'team_id'}})},c};
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.default = (sequelize, DataTypes) => {
+  const Team = sequelize.define('teams', {
+    name: {
+      type: DataTypes.STRING,
+      unique: true
+    }
+  });
+
+  Team.associate = models => {
+    Team.belongsToMany(models.User, {
+      through: models.Member,
+      foreignKey: {
+        name: 'teamId',
+        field: 'team_id'
+      }
+    });
+  };
+  return Team;
+};

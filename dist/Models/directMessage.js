@@ -1,1 +1,34 @@
-'use strict';Object.defineProperty(exports,'__esModule',{value:!0}),exports.default=(a,b)=>{const c=a.define('direct_messages',{text:b.STRING});return c.associate=a=>{c.belongsTo(a.Team,{foreignKey:{name:'teamId',field:'team_id'}}),c.belongsTo(a.User,{foreignKey:{name:'receiverId',field:'receiver_id'}}),c.belongsTo(a.User,{foreignKey:{name:'senderId',field:'sender_id'}})},c};
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.default = (sequelize, DataTypes) => {
+  const DirectMessage = sequelize.define('direct_messages', {
+    text: DataTypes.STRING
+  });
+
+  DirectMessage.associate = models => {
+    DirectMessage.belongsTo(models.Team, {
+      foreignKey: {
+        name: 'teamId',
+        field: 'team_id'
+      }
+    });
+    DirectMessage.belongsTo(models.User, {
+      foreignKey: {
+        name: 'receiverId',
+        field: 'receiver_id'
+      }
+    });
+    DirectMessage.belongsTo(models.User, {
+      foreignKey: {
+        name: 'senderId',
+        field: 'sender_id'
+      }
+    });
+  };
+
+  return DirectMessage;
+};

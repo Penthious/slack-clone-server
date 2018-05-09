@@ -1,1 +1,42 @@
-'use strict';Object.defineProperty(exports,'__esModule',{value:!0});var _formidable=require('formidable'),_formidable2=_interopRequireDefault(_formidable);function _interopRequireDefault(a){return a&&a.__esModule?a:{default:a}}const uploadDir='files';exports.default=(a,b,c)=>{if(!a.is('multipart/form-data'))return c();const d=_formidable2.default.IncomingForm({uploadDir:'files'});return d.parse(a,(b,{operations:d},e)=>{b&&console.log(b);const f=JSON.parse(d);if(Object.keys(e).length){const{file:{type:a,path:b}}=e;f.variables.file={type:a,path:b}}return a.body=f,c()})};
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _formidable = require('formidable');
+
+var _formidable2 = _interopRequireDefault(_formidable);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const uploadDir = 'files';
+
+exports.default = (req, res, next) => {
+  if (!req.is('multipart/form-data')) {
+    return next();
+  }
+
+  const form = _formidable2.default.IncomingForm({
+    uploadDir
+  });
+
+  return form.parse(req, (error, { operations }, files) => {
+    if (error) {
+      console.log(error);
+    }
+
+    const document = JSON.parse(operations);
+
+    if (Object.keys(files).length) {
+      const { file: { type, path } } = files;
+      document.variables.file = {
+        type,
+        path
+      };
+    }
+
+    req.body = document;
+    return next();
+  });
+};

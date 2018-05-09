@@ -1,1 +1,20 @@
-'use strict';Object.defineProperty(exports,'__esModule',{value:!0});var _chai=require('chai'),_chai2=_interopRequireDefault(_chai),_chaiHttp=require('chai-http'),_chaiHttp2=_interopRequireDefault(_chaiHttp);function _interopRequireDefault(a){return a&&a.__esModule?a:{default:a}}_chai2.default.use(_chaiHttp2.default),_chai2.default.should(),exports.default=_chai2.default;
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _chai = require('chai');
+
+var _chai2 = _interopRequireDefault(_chai);
+
+var _chaiHttp = require('chai-http');
+
+var _chaiHttp2 = _interopRequireDefault(_chaiHttp);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_chai2.default.use(_chaiHttp2.default);
+_chai2.default.should();
+
+exports.default = _chai2.default;

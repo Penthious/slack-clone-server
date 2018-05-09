@@ -1,1 +1,121 @@
-'use strict';Object.defineProperty(exports,'__esModule',{value:!0});var _express=require('express'),_express2=_interopRequireDefault(_express),_bodyParser=require('body-parser'),_bodyParser2=_interopRequireDefault(_bodyParser),_apolloServerExpress=require('apollo-server-express'),_graphqlTools=require('graphql-tools'),_path=require('path'),_path2=_interopRequireDefault(_path),_jsonwebtoken=require('jsonwebtoken'),_jsonwebtoken2=_interopRequireDefault(_jsonwebtoken),_mergeGraphqlSchemas=require('merge-graphql-schemas'),_cors=require('cors'),_cors2=_interopRequireDefault(_cors),_http=require('http'),_graphql=require('graphql'),_subscriptionsTransportWs=require('subscriptions-transport-ws'),_dataloader=require('dataloader'),_dataloader2=_interopRequireDefault(_dataloader),_Models=require('./Models'),_Models2=_interopRequireDefault(_Models),_config=require('./config'),_config2=_interopRequireDefault(_config),_auth=require('./auth'),_fileMiddleware=require('./fileMiddleware'),_fileMiddleware2=_interopRequireDefault(_fileMiddleware),_batchFunctions=require('./batchFunctions');function _interopRequireDefault(a){return a&&a.__esModule?a:{default:a}}const typeDefs=(0,_mergeGraphqlSchemas.mergeTypes)((0,_mergeGraphqlSchemas.fileLoader)(_path2.default.join(__dirname,'./Schema'))),resolvers=(0,_mergeGraphqlSchemas.mergeResolvers)((0,_mergeGraphqlSchemas.fileLoader)(_path2.default.join(__dirname,'./Resolvers'))),schema=(0,_graphqlTools.makeExecutableSchema)({typeDefs,resolvers}),app=(0,_express2.default)();app.use((0,_cors2.default)('*')),app.use(_auth.addUser);const endpointURL='/graphql',subscriptionsURL='/subscriptions';app.use('/graphql',_bodyParser2.default.json(),_fileMiddleware2.default,(0,_apolloServerExpress.graphqlExpress)(a=>({schema,context:{models:_Models2.default,user:a.user,SECRET:_config2.default.SECRET,SECRET2:_config2.default.SECRET2,channelLoader:new _dataloader2.default(b=>(0,_batchFunctions.channelBatcher)(b,_Models2.default,a.user))}}))),app.use('/graphiql',(0,_apolloServerExpress.graphiqlExpress)({endpointURL:'/graphql',subscriptionsEndpoint:`ws://${_config2.default.BASE_URL}:${_config2.default.PORT}${'/subscriptions'}`})),app.use('/files',_express2.default.static('files'));const server=(0,_http.createServer)(app);_Models2.default.sequelize.sync().then(()=>{server.listen(_config2.default.PORT,()=>{new _subscriptionsTransportWs.SubscriptionServer({execute:_graphql.execute,subscribe:_graphql.subscribe,schema,onConnect:async({token:a,refreshToken:b})=>{if(a&&b)try{const{user:b}=_jsonwebtoken2.default.verify(a,_config2.default.SECRET);return{models:_Models2.default,user:b}}catch(c){const c=await(0,_auth.refreshTokens)(a,b,_Models2.default,_config2.default.SECRET,_config2.default.SECRET2);return{models:_Models2.default,user:c.user}}return{models:_Models2.default}}},{server,path:'/subscriptions'})})}),exports.default=app;
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _express = require('express');
+
+var _express2 = _interopRequireDefault(_express);
+
+var _bodyParser = require('body-parser');
+
+var _bodyParser2 = _interopRequireDefault(_bodyParser);
+
+var _apolloServerExpress = require('apollo-server-express');
+
+var _graphqlTools = require('graphql-tools');
+
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
+var _jsonwebtoken = require('jsonwebtoken');
+
+var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
+
+var _mergeGraphqlSchemas = require('merge-graphql-schemas');
+
+var _cors = require('cors');
+
+var _cors2 = _interopRequireDefault(_cors);
+
+var _http = require('http');
+
+var _graphql = require('graphql');
+
+var _subscriptionsTransportWs = require('subscriptions-transport-ws');
+
+var _dataloader = require('dataloader');
+
+var _dataloader2 = _interopRequireDefault(_dataloader);
+
+var _Models = require('./Models');
+
+var _Models2 = _interopRequireDefault(_Models);
+
+var _config = require('./config');
+
+var _config2 = _interopRequireDefault(_config);
+
+var _auth = require('./auth');
+
+var _fileMiddleware = require('./fileMiddleware');
+
+var _fileMiddleware2 = _interopRequireDefault(_fileMiddleware);
+
+var _batchFunctions = require('./batchFunctions');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const typeDefs = (0, _mergeGraphqlSchemas.mergeTypes)((0, _mergeGraphqlSchemas.fileLoader)(_path2.default.join(__dirname, './Schema')));
+const resolvers = (0, _mergeGraphqlSchemas.mergeResolvers)((0, _mergeGraphqlSchemas.fileLoader)(_path2.default.join(__dirname, './Resolvers')));
+
+const schema = (0, _graphqlTools.makeExecutableSchema)({
+  typeDefs,
+  resolvers
+});
+
+const app = (0, _express2.default)();
+app.use((0, _cors2.default)('*'));
+
+app.use(_auth.addUser);
+
+const endpointURL = '/graphql';
+const subscriptionsURL = '/subscriptions';
+
+app.use(endpointURL, _bodyParser2.default.json(), _fileMiddleware2.default, (0, _apolloServerExpress.graphqlExpress)(req => ({
+  schema,
+  context: {
+    models: _Models2.default,
+    user: req.user,
+    SECRET: _config2.default.SECRET,
+    SECRET2: _config2.default.SECRET2,
+    channelLoader: new _dataloader2.default(ids => (0, _batchFunctions.channelBatcher)(ids, _Models2.default, req.user))
+  }
+})));
+app.use('/graphiql', (0, _apolloServerExpress.graphiqlExpress)({
+  endpointURL,
+  subscriptionsEndpoint: `ws://${_config2.default.BASE_URL}:${_config2.default.PORT}${subscriptionsURL}`
+}));
+app.use('/files', _express2.default.static('files'));
+
+const server = (0, _http.createServer)(app);
+
+_Models2.default.sequelize.sync().then(() => {
+  server.listen(_config2.default.PORT, () => {
+    // eslint-disable-next-line no-new
+    new _subscriptionsTransportWs.SubscriptionServer({
+      execute: _graphql.execute,
+      subscribe: _graphql.subscribe,
+      schema,
+      onConnect: async ({ token, refreshToken }) => {
+        if (token && refreshToken) {
+          try {
+            const { user } = _jsonwebtoken2.default.verify(token, _config2.default.SECRET);
+            return { models: _Models2.default, user };
+          } catch (err) {
+            const newTokens = await (0, _auth.refreshTokens)(token, refreshToken, _Models2.default, _config2.default.SECRET, _config2.default.SECRET2);
+            return { models: _Models2.default, user: newTokens.user };
+          }
+        }
+        return { models: _Models2.default };
+      }
+    }, {
+      server,
+      path: subscriptionsURL
+    });
+  });
+});
+
+exports.default = app;
