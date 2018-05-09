@@ -25,16 +25,19 @@ services:
       - db
       - redis
     command: ["./wait-for-it.sh", "db:5432", "--", "node", "index.js"]
+    volumes:
+      - ./files:/app/files
   nginx:
     image: nginx
     volumes:
      - ./site.template:/etc/nginx/conf.d/site.template
+     - ./files:/files
     ports:
      - "8080:80"
     networks:
       - webnet
     depends_on:
       - web
-    command: /bin/bash -c "envsubst < /etc/nginx/conf.d/site.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+    command: /bin/bash -c "cat < /etc/nginx/conf.d/site.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
 networks:
   webnet:
