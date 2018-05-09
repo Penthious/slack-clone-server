@@ -8,7 +8,10 @@
     "serve": "node dist/index.js",
     "build": "babel src -d dist",
     "test": "TEST_DB=testslack jest",
-    "prettier": "prettier --single-quote --trailing-comma all --write '{./*.js,./**/*.js}'"
+    "prettier":
+      "prettier --single-quote --trailing-comma all --write '{./*.js,./**/*.js}'",
+    "docker:build": "docker build -t penthious/slack-clone-server:latest",
+    "docker:push": "docker push penthious/slack-clone-server:latest"
   },
   "keywords": [],
   "author": "",
