@@ -1,11 +1,1 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-exports.default = sequelize => {
-  const PCMember = sequelize.define('pcmembers', {});
-
-  return PCMember;
-};
+'use strict';Object.defineProperty(exports,'__esModule',{value:!0}),exports.default=a=>{const b=a.define('pcmembers',{});return b};

@@ -1,9 +1,4 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = `
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.default=`
   type Channel {
     id: Int!
     name: String!

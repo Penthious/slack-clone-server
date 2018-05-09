@@ -1,15 +1,1 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-exports.default = (e, models) => {
-  if (e instanceof models.sequelize.ValidationError) {
-    return e.errors.map(error => {
-      const { path, message } = error;
-      return { path, message };
-    });
-  }
-  return [{ path: 'Unknown', message: 'Something went wrong' }];
-};
+'use strict';Object.defineProperty(exports,'__esModule',{value:!0}),exports.default=(a,b)=>a instanceof b.sequelize.ValidationError?a.errors.map(a=>{const{path:b,message:c}=a;return{path:b,message:c}}):[{path:'Unknown',message:'Something went wrong'}];
