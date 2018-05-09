@@ -15,7 +15,7 @@ services:
       POSTGRES_PASSWORD: test
       POSTGRES_DB: slack
   web:
-    image: slack-clone-server
+    image: penthious/slack-clone-server:latest
     networks:
       - webnet
     environment:

@@ -1,8 +1,11 @@
 FROM node:10
 WORKDIR /app
-COPY package-lock.json .
+
 COPY package.json .
-RUN npm install
-COPY dist .
+COPY yarn.lock .
 COPY wait-for-it.sh .
+COPY dist .
+
+RUN yarn install --prod
+
 CMD node index.js
